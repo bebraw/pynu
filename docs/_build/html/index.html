@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Overview of Pynu (Python Node Utilities) &mdash; Pynu v0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Pynu v0.1.0 documentation" href="" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="">Pynu v0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview-of-pynu-python-node-utilities">
+<h1>Overview of Pynu (Python Node Utilities)<a class="headerlink" href="#overview-of-pynu-python-node-utilities" title="Permalink to this headline">¶</a></h1>
+<p>The library offers two helper classes, GraphNode and TreeNode. TreeNode can be
+considered to be a special case of a GraphNode. A TreeNode may have only one
+parent at a time. In addition it provides functionality to find the root of the
+tree (find_root) and to walk through each node of the tree based on the node
+used as a pivot.</p>
+<div class="section" id="node">
+<h2>Node<a class="headerlink" href="#node" title="Permalink to this headline">¶</a></h2>
+<p>Both GraphNode and TreeNode have been derived from Node that provides following
+functionality:</p>
+<dl class="method">
+<dt id="pynu.node.Node.__setattr__">
+<tt class="descclassname">Node.</tt><tt class="descname">__setattr__</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#pynu.node.Node.__setattr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assignment of children/parents resets previous content and creates
+needed links to nodes. Otherwise setting attributes works normally.</p>
+<p>Simple assignment</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>Tuple assignment</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">node3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node3</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>Assign value to an attribute</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">13</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynu.node.NodeContainer.empty">
+<tt class="descclassname">NodeContainer.</tt><tt class="descname">empty</tt><big>(</big><big>)</big><a class="headerlink" href="#pynu.node.NodeContainer.empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Empties container content.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynu.node.NodeContainer.append">
+<tt class="descclassname">NodeContainer.</tt><tt class="descname">append</tt><big>(</big><em>*items</em><big>)</big><a class="headerlink" href="#pynu.node.NodeContainer.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends given items to container.</p>
+<p>Regular case</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>Cycles are allowed by default</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
+</pre></div>
+</div>
+<p>Append multiple times</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Append multiple at once</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span> <span class="ow">in</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node3</span> <span class="ow">in</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynu.node.NodeContainer.remove">
+<tt class="descclassname">NodeContainer.</tt><tt class="descname">remove</tt><big>(</big><em>*items</em><big>)</big><a class="headerlink" href="#pynu.node.NodeContainer.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes given items from container.</p>
+<p>Regular case</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Remove multiple times</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+<p>Remove multiple at once</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynu.node.NodeContainer.find">
+<tt class="descclassname">NodeContainer.</tt><tt class="descname">find</tt><big>(</big><em>**kvargs</em><big>)</big><a class="headerlink" href="#pynu.node.NodeContainer.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds child nodes matching to given rules.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">,</span> <span class="n">node4</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;joe&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node2</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;blue&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node3</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;black&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node4</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node3</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Single argument, single result</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;joe&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;blue&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">node2</span>
+</pre></div>
+</div>
+<p>Single argument, multiple results</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node3</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">node1</span><span class="p">,</span> <span class="n">node4</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Multiple arguments, single result</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;joe&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span> <span class="o">==</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>Regex argument (match anything except newline)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>Regex argument (match from beginning)</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;^bl&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>No result</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s">&#39;red&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="bp">None</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+<div class="section" id="graphnode">
+<h2>GraphNode<a class="headerlink" href="#graphnode" title="Permalink to this headline">¶</a></h2>
+<p>Currently GraphNode does not provide any extra functionality.</p>
+</div>
+<div class="section" id="treenode">
+<h2>TreeNode<a class="headerlink" href="#treenode" title="Permalink to this headline">¶</a></h2>
+<p>TreeNode provides following utility methods:</p>
+<dl class="class">
+<dt id="pynu.TreeNode">
+<em class="property">class </em><tt class="descclassname">pynu.</tt><tt class="descname">TreeNode</tt><a class="headerlink" href="#pynu.TreeNode" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="pynu.TreeNode.find_root">
+<tt class="descname">find_root</tt><big>(</big><big>)</big><a class="headerlink" href="#pynu.TreeNode.find_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the root node.</p>
+<p>Regular case</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node1a</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1b</span><span class="p">,</span> <span class="n">node1a1</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node1a</span><span class="p">,</span> <span class="n">node1b</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1a</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node1a1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1a</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1b</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1a1</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
+</pre></div>
+</div>
+<p>Cyclic case</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node2</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pynu.TreeNode.parent">
+<tt class="descname">parent</tt><a class="headerlink" href="#pynu.TreeNode.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the value of parent node.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>No parent has been set yet</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="bp">None</span>
+</pre></div>
+</div>
+<p>Set parent</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">node2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">node2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="pynu.TreeNode.walk">
+<tt class="descname">walk</tt><big>(</big><big>)</big><a class="headerlink" href="#pynu.TreeNode.walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Walks through the nodes beginning from the current one in preorder.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node4</span><span class="p">,</span> <span class="n">node5</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node2</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node3</span><span class="p">,</span> <span class="n">node4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node3</span><span class="p">,</span> <span class="n">node4</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node5</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">walk</span><span class="p">()):</span>
+<span class="gp">... </span>   <span class="k">assert</span> <span class="n">node</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="">Overview of Pynu (Python Node Utilities)</a><ul>
+<li><a class="reference external" href="#node">Node</a></li>
+<li><a class="reference external" href="#graphnode">GraphNode</a></li>
+<li><a class="reference external" href="#treenode">TreeNode</a></li>
+</ul>
+</li>
+</ul>
+
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/index.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="">Pynu v0.1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Juho Vepsäläinen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.3.
+    </div>
+  </body>
+</html>

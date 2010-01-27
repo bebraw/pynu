@@ -41,6 +41,7 @@ class Node(object):
 
         >>> node1, node2 = Node(), Node()
         >>> node1.children = node2
+        >>>
         >>> assert node1.children[0] == node2
         >>> assert node2.parents[0] == node1
 
@@ -48,6 +49,7 @@ class Node(object):
 
         >>> node1, node2, node3 = Node(), Node(), Node()
         >>> node1.children = (node2, node3)
+        >>>
         >>> assert node1.children[0] == node2
         >>> assert node2.parents[0] == node1
         >>> assert node1.children[1] == node3
@@ -56,6 +58,7 @@ class Node(object):
         Assign value to an attribute
         
         >>> node = Node()
+        >>>
         >>> node.value = 13
         >>> assert node.value == 13
         '''
@@ -90,8 +93,10 @@ class NodeContainer(list):
         """Empties container content.
 
         >>> node1, node2 = Node(), Node()
-        >>> node1.children.append(node2)
+        >>>
+        >>> node1.children = node2
         >>> node1.children.empty()
+        >>>
         >>> assert len(node1.children) == 0
         >>> assert len(node2.parents) == 0
         """
@@ -107,13 +112,16 @@ class NodeContainer(list):
         Regular case
         
         >>> node1, node2 = Node(), Node()
-        >>> node1.children.append(node2)
+        >>>
+        >>> node1.children = node2
+        >>>
         >>> assert node1.children[0] == node2
         >>> assert node2.parents[0] == node1
 
         Cycles are allowed by default
 
         >>> node1.parents.append(node2)
+        >>>
         >>> assert node2.children[0] == node1
         >>> assert node1.parents[0] == node2
 
@@ -122,6 +130,7 @@ class NodeContainer(list):
         >>> node1, node2 = Node(), Node()
         >>> node1.children.append(node2)
         >>> node1.children.append(node2)
+        >>>
         >>> assert node1.children[0] == node2
         >>> assert node2.parents[0] == node1
         >>> assert len(node1.children) == 1
@@ -130,7 +139,9 @@ class NodeContainer(list):
         Append multiple at once
 
         >>> node1, node2, node3 = Node(), Node(), Node()
-        >>> node1.children.append(node2, node3)
+        >>>
+        >>> node1.children = (node2, node3)
+        >>>
         >>> assert len(node1.children) == 2
         >>> assert node2 in node1.children
         >>> assert node3 in node1.children
@@ -148,26 +159,32 @@ class NodeContainer(list):
         Regular case
 
         >>> node1, node2 = Node(), Node()
-        >>> node1.children.append(node2)
+        >>>
+        >>> node1.children = node2
         >>> node1.children.remove(node2)
+        >>>
         >>> assert len(node1.children) == 0
         >>> assert len(node2.parents) == 0
 
         Remove multiple times
 
         >>> node1, node2 = Node(), Node()
-        >>> node1.parents.append(node2)
+        >>>
+        >>> node1.parents = node2
         >>> node1.parents.remove(node2)
         >>> node1.parents.remove(node2)
         >>> node1.parents.remove(node2)
+        >>>
         >>> assert len(node1.parents) == 0
         >>> assert len(node2.children) == 0
 
         Remove multiple at once
 
         >>> node1, node2, node3 = Node(), Node(), Node()
-        >>> node1.children.append(node2, node3)
+        >>>
+        >>> node1.children = (node2, node3)
         >>> node1.children.remove(node2, node3)
+        >>>
         >>> assert len(node1.children) == 0
         """
         for item in items:
@@ -181,13 +198,15 @@ class NodeContainer(list):
         """Finds child nodes matching to given rules.
 
         >>> node1, node2, node3, node4 = Node(), Node(), Node(), Node()
+        >>>
+        >>> node1.children = (node2, node3)
+        >>> node3.parents.append(node4)
+        >>>
         >>> node1.name = 'joe'
         >>> node1.value = 13
         >>> node2.color = 'blue'
         >>> node3.color = 'black'
         >>> node4.value = 13
-        >>> node1.children = (node2, node3)
-        >>> node3.parents.append(node4)
 
         Single argument, single result
 

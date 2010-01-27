@@ -52,8 +52,10 @@ class TreeNode(Node):
         """Sets the value of parent node. The parent has to be a TreeNode.
 
         >>> node1, node2, node3 = TreeNode(), TreeNode(), TreeNode()
+        >>>
         >>> node1.parent = node2
         >>> node1.parent = node3
+        >>>
         >>> assert node2.children == []
         >>> assert node3.children == [node1, ]
         """
@@ -74,6 +76,7 @@ class TreeNode(Node):
         >>> node1b, node1a1 = TreeNode(), TreeNode()
         >>> node1.children.append(node1a, node1b)
         >>> node1a.children.append(node1a1)
+        >>>
         >>> assert node1.find_root() == node1
         >>> assert node1a.find_root() == node1
         >>> assert node1b.find_root() == node1
@@ -84,6 +87,7 @@ class TreeNode(Node):
         >>> node1, node2 = TreeNode(), TreeNode()
         >>> node1.children.append(node2)
         >>> node2.children.append(node1)
+        >>>
         >>> assert node1.find_root() == None
         >>> assert node2.find_root() == None
         """
@@ -108,9 +112,11 @@ class TreeNode(Node):
 
         >>> node1, node2, node3 = TreeNode(), TreeNode(), TreeNode()
         >>> node4, node5 = TreeNode(), TreeNode()
+        >>>
         >>> node1.children = (node2, node5)
         >>> node2.children = (node3, node4)
         >>> result = (node1, node3, node4, node2, node5 )
+        >>>
         >>> for i, node in enumerate(node1.walk()):
         ...    assert node == result[i], '%s %s %s' % (i, node, result[i])
         """

@@ -56,6 +56,7 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <p>Simple assignment</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node2</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
 </pre></div>
@@ -63,6 +64,7 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <p>Tuple assignment</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">node3</span>
@@ -71,6 +73,7 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 </div>
 <p>Assign value to an attribute</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">13</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">13</span>
 </pre></div>
@@ -82,8 +85,10 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <tt class="descclassname">NodeContainer.</tt><tt class="descname">empty</tt><big>(</big><big>)</big><a class="headerlink" href="#pynu.node.NodeContainer.empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Empties container content.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
@@ -96,13 +101,16 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <dd><p>Appends given items to container.</p>
 <p>Regular case</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node2</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
 </pre></div>
 </div>
 <p>Cycles are allowed by default</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
 </pre></div>
@@ -111,6 +119,7 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">node1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
@@ -119,7 +128,9 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 </div>
 <p>Append multiple at once</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span> <span class="ow">in</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node3</span> <span class="ow">in</span> <span class="n">node1</span><span class="o">.</span><span class="n">children</span>
@@ -133,26 +144,32 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <dd><p>Removes given items from container.</p>
 <p>Regular case</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>Remove multiple times</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span> <span class="o">=</span> <span class="n">node2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">parents</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node2</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
 <p>Remove multiple at once</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
@@ -163,13 +180,15 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <tt class="descclassname">NodeContainer.</tt><tt class="descname">find</tt><big>(</big><em>**kvargs</em><big>)</big><a class="headerlink" href="#pynu.node.NodeContainer.find" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds child nodes matching to given rules.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">,</span> <span class="n">node4</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node3</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node4</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;joe&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">13</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node2</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;blue&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node3</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s">&#39;black&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node4</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">13</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node3</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">node3</span><span class="o">.</span><span class="n">parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node4</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Single argument, single result</p>
@@ -219,6 +238,7 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1b</span><span class="p">,</span> <span class="n">node1a1</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node1a</span><span class="p">,</span> <span class="n">node1b</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1a</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node1a1</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1a</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1b</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="n">node1</span>
@@ -229,6 +249,7 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node2</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node1</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node1</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">node2</span><span class="o">.</span><span class="n">find_root</span><span class="p">()</span> <span class="o">==</span> <span class="bp">None</span>
 </pre></div>
@@ -259,9 +280,11 @@ needed links to nodes. Otherwise setting attributes works normally.</p>
 <dd><p>Walks through the nodes beginning from the current one in preorder.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node3</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node4</span><span class="p">,</span> <span class="n">node5</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(),</span> <span class="n">TreeNode</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node2</span><span class="p">,</span> <span class="n">node5</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node2</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">(</span><span class="n">node3</span><span class="p">,</span> <span class="n">node4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">node1</span><span class="p">,</span> <span class="n">node3</span><span class="p">,</span> <span class="n">node4</span><span class="p">,</span> <span class="n">node2</span><span class="p">,</span> <span class="n">node5</span> <span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">node1</span><span class="o">.</span><span class="n">walk</span><span class="p">()):</span>
 <span class="gp">... </span>   <span class="k">assert</span> <span class="n">node</span> <span class="o">==</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s"> </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 </pre></div>

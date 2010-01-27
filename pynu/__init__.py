@@ -23,4 +23,4 @@ from graph import GraphNode
 from tree import TreeNode
 
 __author__ = 'Juho Vepsäläinen'
-__version__ = '0.1.0'
+__version__ = '0.1.1-dev'

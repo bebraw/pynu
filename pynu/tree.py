@@ -21,6 +21,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 """
 from node import Node
 
+
 class TreeNode(Node):
     _parents_name = '_parents'
 

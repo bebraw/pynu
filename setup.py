@@ -23,7 +23,7 @@ import pynu
 setup(name='Pynu',
     version=pynu.__version__,
     description='Pynu provides utility classes that offer basic graph tree \
-    traversal and manipulation functionality.',
+traversal and manipulation functionality.',
     #long_description=pynu.__doc__,
     author=pynu.__author__,
     author_email='bebraw@gmail.com',

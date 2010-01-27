@@ -35,7 +35,7 @@ class Node(object):
     def __setattr__(self, name, value):
         '''
         Assignment of children/parents resets previous content and creates
-        needed links to nodes. Otherwise setting attributes works normally.
+        needed links to nodes. Otherwise setting attributes works as expected.
 
         Simple assignment
 

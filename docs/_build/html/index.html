@@ -52,7 +52,7 @@ functionality:</p>
 <dt id="pynu.node.Node.__setattr__">
 <tt class="descclassname">Node.</tt><tt class="descname">__setattr__</tt><big>(</big><em>name</em>, <em>value</em><big>)</big><a class="headerlink" href="#pynu.node.Node.__setattr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Assignment of children/parents resets previous content and creates
-needed links to nodes. Otherwise setting attributes works normally.</p>
+needed links to nodes. Otherwise setting attributes works as expected.</p>
 <p>Simple assignment</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">Node</span><span class="p">(),</span> <span class="n">Node</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">node1</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">node2</span>

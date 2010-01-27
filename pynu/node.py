@@ -21,11 +21,13 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 """
 import re
 
+
 class Node(object):
     _children_name = 'children'
     _parents_name = 'parents'
 
     def __init__(self):
+
         def set_container(name, complementary_name):
             setattr(self, name, NodeContainer(self, name, complementary_name))
 
@@ -33,8 +35,7 @@ class Node(object):
         set_container(self._parents_name, self._children_name)
 
     def __setattr__(self, name, value):
-        '''
-        Assignment of children/parents resets previous content and creates
+        """ Assignment of children/parents resets previous content and creates
         needed links to nodes. Otherwise setting attributes works as expected.
 
         Simple assignment
@@ -56,12 +57,13 @@ class Node(object):
         >>> assert node3.parents[0] == node1
 
         Assign value to an attribute
-        
+
         >>> node = Node()
         >>>
         >>> node.value = 13
         >>> assert node.value == 13
-        '''
+        """
+
         def container_template(container_name):
             if hasattr(self, container_name):
                 container = getattr(self, container_name)
@@ -110,7 +112,7 @@ class NodeContainer(list):
         """Appends given items to container.
 
         Regular case
-        
+
         >>> node1, node2 = Node(), Node()
         >>>
         >>> node1.children = node2
@@ -234,7 +236,7 @@ class NodeContainer(list):
         >>> assert node2.parents.find(color='red') == None
         """
         found_nodes = self._recursion(kvargs, [], [])
-        
+
         if len(found_nodes) > 0:
             return found_nodes[0] if len(found_nodes) == 1 else found_nodes
 

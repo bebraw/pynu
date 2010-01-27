@@ -21,6 +21,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 """
 from node import Node
 
+
 class TreeNode(Node):
     _parents_name = '_parents'
 
@@ -37,7 +38,7 @@ class TreeNode(Node):
         >>> node1, node2 = TreeNode(), TreeNode()
 
         No parent has been set yet
-        
+
         >>> assert node1.parent is None
 
         Set parent
@@ -71,7 +72,7 @@ class TreeNode(Node):
         """Finds the root node.
 
         Regular case
-        
+
         >>> node1, node1a = TreeNode(), TreeNode()
         >>> node1b, node1a1 = TreeNode(), TreeNode()
         >>> node1.children.append(node1a, node1b)
@@ -102,7 +103,7 @@ class TreeNode(Node):
 
             if node in checked_nodes:
                 return
-            
+
             checked_nodes.add(node)
 
         return node
@@ -120,6 +121,7 @@ class TreeNode(Node):
         >>> for i, node in enumerate(node1.walk()):
         ...    assert node == result[i], '%s %s %s' % (i, node, result[i])
         """
+
         def _walk(nodes):
             for node in nodes:
                 for child in _walk(node.children):

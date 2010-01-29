@@ -231,7 +231,10 @@ class NodeContainer(object):
                 complementary_items.remove(self.owner)
 
     def find(self, **kvargs):
-        """Finds child nodes matching to given rules.
+        """Finds nodes matching to given rules. The idea is that the method
+        seeks based on the type of the container. For example in case
+        "node.parents.find" is invoked, it goes through all parents beginning
+        from the parents of the given node.
 
         >>> node1, node2, node3, node4 = Node(), Node(), Node(), Node()
         >>>
@@ -279,20 +282,7 @@ class NodeContainer(object):
 
         for node in self._nodes:
             try:
-                all_match = True
-                for wanted_attribute, wanted_value in search_clauses.items():
-                    attribute_value = getattr(node, wanted_attribute)
-
-                    if isinstance(wanted_value, str):
-                        matched = re.match(wanted_value, attribute_value)
-                    else:
-                        matched = wanted_value == attribute_value
-
-                    if not matched:
-                        all_match = False
-                        break
-
-                if all_match:
+                if self._all_match(node, search_clauses):
                     found_nodes.append(node)
             except AttributeError:
                 pass
@@ -304,3 +294,17 @@ class NodeContainer(object):
                     visited_nodes)
 
         return found_nodes
+
+    def _all_match(self, node, search_clauses):
+        for wanted_attribute, wanted_value in search_clauses.items():
+            attribute_value = getattr(node, wanted_attribute)
+
+            if isinstance(wanted_value, str):
+                matched = re.match(wanted_value, attribute_value)
+            else:
+                matched = wanted_value == attribute_value
+
+            if not matched:
+                return False
+
+        return True

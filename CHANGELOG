@@ -8,9 +8,8 @@ Changelog
 ------------------
 
 * Made code compatible with PEP 8.
-
 * Removed extraneous methods from NodeContainer (ie. children/parents
-attribute).
+  attribute).
 
 
 0.1.0 (2010-01-27)

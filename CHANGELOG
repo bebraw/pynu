@@ -1,4 +1,6 @@
-- 0.1.1
+xx/xx/10 - 0.1.1
 * Made code compatible with PEP 8.
+* Removed extraneous methods from NodeContainer (ie. children/parents
+attribute)
 
 01/27/10 - 0.1.0 - Initial Release

@@ -83,13 +83,47 @@ class Node(object):
             super(Node, self).__setattr__(name, value)
 
 
-class NodeContainer(list):
+class NodeContainer(object):
 
     def __init__(self, owner, name, complementary_name):
         super(NodeContainer, self).__init__()
+
+        self._nodes = list()
         self.owner = owner
         self.name = name
         self.complementary_name = complementary_name
+
+    def __getitem__(self, key):
+        return self._nodes[key]
+
+    def __eq__(self, other):
+        """ Checks if container contents are equal to other.
+
+        >>> node1, node2, node3 = Node(), Node(), Node()
+        >>>
+        >>> node1.children = node3
+        >>> node2.children = node3
+        >>>
+        >>> assert node1.children == [node3, ]
+        >>> assert node1.children == node2.children
+        """
+        return self._nodes == other
+
+    def ___neq__(self, other):
+        """ Checks if container contents are not equal to other.
+
+        >>> node1, node2, node3 = Node(), Node(), Node()
+        >>>
+        >>> node1.children = node3
+        >>> node2.children = node3
+        >>>
+        >>> assert node1.children != [node2, ]
+        >>> assert node1.children != node3.children
+        """
+        return not self == other
+
+    def __len__(self):
+        return len(self._nodes)
 
     def empty(self):
         """Empties container content.
@@ -103,7 +137,7 @@ class NodeContainer(list):
         >>> assert len(node2.parents) == 0
         """
         for item in self:
-            super(NodeContainer, self).remove(item)
+            self._nodes.remove(item)
             complementary_items = getattr(item,
                 self.complementary_name)
             complementary_items.remove(self.owner)
@@ -149,8 +183,8 @@ class NodeContainer(list):
         >>> assert node3 in node1.children
         """
         for item in items:
-            if item not in self:
-                super(NodeContainer, self).append(item)
+            if item not in self._nodes:
+                self._nodes.append(item)
                 complementary_items = getattr(item,
                     self.complementary_name)
                 complementary_items.append(self.owner)
@@ -191,7 +225,7 @@ class NodeContainer(list):
         """
         for item in items:
             if item in self:
-                super(NodeContainer, self).remove(item)
+                self._nodes.remove(item)
                 complementary_items = getattr(item,
                     self.complementary_name)
                 complementary_items.remove(self.owner)
@@ -243,7 +277,7 @@ class NodeContainer(list):
     def _recursion(self, search_clauses, found_nodes, visited_nodes):
         visited_nodes.append(self.owner)
 
-        for node in self:
+        for node in self._nodes:
             try:
                 all_match = True
                 for wanted_attribute, wanted_value in search_clauses.items():

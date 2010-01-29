@@ -5,4 +5,3 @@
 a loop
 -add proper long_description to setup.py like at
 http://github.com/cburroughs/pep8.py/blob/master/setup.py
--derive NodeContainer from object and implement __setattr__, __getattr__

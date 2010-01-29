@@ -82,15 +82,6 @@ class TreeNode(Node):
         >>> assert node1a.find_root() == node1
         >>> assert node1b.find_root() == node1
         >>> assert node1a1.find_root() == node1
-
-        Cyclic case
-
-        >>> node1, node2 = TreeNode(), TreeNode()
-        >>> node1.children.append(node2)
-        >>> node2.children.append(node1)
-        >>>
-        >>> assert node1.find_root() == None
-        >>> assert node2.find_root() == None
         """
         if self.parent:
             return self._parents.find(parent=None)

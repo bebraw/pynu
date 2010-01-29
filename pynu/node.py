@@ -22,67 +22,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 import re
 
 
-class Node(object):
-    _children_name = 'children'
-    _parents_name = 'parents'
-
-    def __init__(self):
-
-        def set_container(name, complementary_name):
-            setattr(self, name, NodeContainer(self, name, complementary_name))
-
-        set_container(self._children_name, self._parents_name)
-        set_container(self._parents_name, self._children_name)
-
-    def __setattr__(self, name, value):
-        """ Assignment of children/parents resets previous content and creates
-        needed links to nodes. Otherwise setting attributes works as expected.
-
-        Simple assignment
-
-        >>> node1, node2 = Node(), Node()
-        >>> node1.children = node2
-        >>>
-        >>> assert node1.children[0] == node2
-        >>> assert node2.parents[0] == node1
-
-        Tuple assignment
-
-        >>> node1, node2, node3 = Node(), Node(), Node()
-        >>> node1.children = (node2, node3)
-        >>>
-        >>> assert node1.children[0] == node2
-        >>> assert node2.parents[0] == node1
-        >>> assert node1.children[1] == node3
-        >>> assert node3.parents[0] == node1
-
-        Assign value to an attribute
-
-        >>> node = Node()
-        >>>
-        >>> node.value = 13
-        >>> assert node.value == 13
-        """
-
-        def container_template(container_name):
-            if hasattr(self, container_name):
-                container = getattr(self, container_name)
-
-                container.empty()
-
-                if hasattr(value, '__iter__'):
-                    container.append(*value)
-                else:
-                    container.append(value)
-            else:
-                super(Node, self).__setattr__(name, value)
-
-        if name in (self._children_name, self._parents_name):
-            container_template(name)
-        else:
-            super(Node, self).__setattr__(name, value)
-
-
 class NodeContainer(object):
 
     def __init__(self, owner, name, complementary_name):
@@ -97,9 +36,11 @@ class NodeContainer(object):
         return self._nodes[key]
 
     def __eq__(self, other):
-        """ Checks if container contents are equal to other.
+        """Checks if container contents are equal to other.
 
         >>> node1, node2, node3 = Node(), Node(), Node()
+        >>>
+        >>> assert node1.children == None
         >>>
         >>> node1.children = node3
         >>> node2.children = node3
@@ -107,10 +48,13 @@ class NodeContainer(object):
         >>> assert node1.children == [node3, ]
         >>> assert node1.children == node2.children
         """
+        if len(self._nodes) == 0 and other is None:
+            return True
+
         return self._nodes == other
 
     def ___neq__(self, other):
-        """ Checks if container contents are not equal to other.
+        """Checks if container contents are not equal to other.
 
         >>> node1, node2, node3 = Node(), Node(), Node()
         >>>
@@ -125,6 +69,28 @@ class NodeContainer(object):
     def __len__(self):
         return len(self._nodes)
 
+    def _set_content(self, content):
+        """Sets content of the container.
+
+        >>> node1, node2 = Node(), Node()
+        >>> node1.children._set_content(node2)
+        >>>
+        >>> assert node1.children == [node2, ]
+        >>> assert node2.parents == [node1, ]
+        >>>
+        >>> node3 = Node()
+        >>> node1.children._set_content(node3)
+        >>>
+        >>> assert node1.children == [node3, ]
+        >>> assert node2.parents == None
+        """
+        self.empty()
+
+        if hasattr(content, '__iter__'):
+            self.append(*content)
+        else:
+            self.append(content)
+
     def empty(self):
         """Empties container content.
 
@@ -136,7 +102,7 @@ class NodeContainer(object):
         >>> assert len(node1.children) == 0
         >>> assert len(node2.parents) == 0
         """
-        for item in self:
+        for item in self._nodes:
             self._nodes.remove(item)
             complementary_items = getattr(item,
                 self.complementary_name)
@@ -325,3 +291,62 @@ class NodeContainer(object):
                 return False
 
         return True
+
+
+class Node(object):
+    _children_container = NodeContainer
+    _children_name = 'children'
+    _parents_container = NodeContainer
+    _parents_name = 'parents'
+
+    def __init__(self):
+
+        def set_container(container, name, complementary_name):
+            setattr(self, name, container(self, name, complementary_name))
+
+        set_container(self._children_container, self._children_name,
+            self._parents_name)
+        set_container(self._parents_container, self._parents_name,
+            self._children_name)
+
+    def __setattr__(self, name, value):
+        """ Assignment of children/parents resets previous content and creates
+        needed links to nodes. Otherwise setting attributes works as expected.
+
+        Simple assignment
+
+        >>> node1, node2 = Node(), Node()
+        >>> node1.children = node2
+        >>>
+        >>> assert node1.children[0] == node2
+        >>> assert node2.parents[0] == node1
+
+        Tuple assignment
+
+        >>> node1, node2, node3 = Node(), Node(), Node()
+        >>> node1.children = (node2, node3)
+        >>>
+        >>> assert node1.children[0] == node2
+        >>> assert node2.parents[0] == node1
+        >>> assert node1.children[1] == node3
+        >>> assert node3.parents[0] == node1
+
+        Assign value to an attribute
+
+        >>> node = Node()
+        >>>
+        >>> node.value = 13
+        >>> assert node.value == 13
+        """
+
+        def container_template(container_name):
+            if hasattr(self, container_name):
+                container = getattr(self, container_name)
+                container._set_content(value)
+            else:
+                super(Node, self).__setattr__(name, value)
+
+        if name in (self._children_name, self._parents_name):
+            container_template(name)
+        else:
+            super(Node, self).__setattr__(name, value)

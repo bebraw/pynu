@@ -19,54 +19,37 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 """
-from node import Node
+from node import Node, NodeContainer
+
+
+class ParentContainer(NodeContainer):
+
+    def _set_content(self, content):
+        """Sets content of the container. Note that the new content has to be
+        a TreeNode.
+
+        >>> node1, node2 = TreeNode(), TreeNode()
+        >>> node2.parent._set_content(node1)
+        >>>
+        >>> assert node1.children == [node2, ]
+        >>> assert node2.parent == [node1, ]
+        >>>
+        >>> node3 = TreeNode()
+        >>> node2.parent._set_content(node3)
+        >>>
+        >>> assert node1.children == None
+        >>> assert node2.parent == [node3, ]
+        >>> assert node3.children == [node2, ]
+        """
+        assert isinstance(content, TreeNode)
+
+        self.empty()
+        self.append(content)
 
 
 class TreeNode(Node):
-    _parents_name = '_parents'
-
-    def __setattr__(self, name, value):
-        if name == 'parent':
-            self._set_parent(value)
-        else:
-            super(TreeNode, self).__setattr__(name, value)
-
-    @property
-    def parent(self):
-        """Gets the value of parent node.
-
-        >>> node1, node2 = TreeNode(), TreeNode()
-
-        No parent has been set yet
-
-        >>> assert node1.parent is None
-
-        Set parent
-
-        >>> node1.parent = node2
-        >>> assert node1.parent == node2
-        """
-        if len(self._parents) > 0:
-            return self._parents[0]
-
-    def _set_parent(self, value):
-        """Sets the value of parent node. The parent has to be a TreeNode.
-
-        >>> node1, node2, node3 = TreeNode(), TreeNode(), TreeNode()
-        >>>
-        >>> node1.parent = node2
-        >>> node1.parent = node3
-        >>>
-        >>> assert node2.children == []
-        >>> assert node3.children == [node1, ]
-        """
-        assert len(self._parents) <= 1
-        assert isinstance(value, TreeNode)
-
-        if len(self._parents) == 1:
-            self._parents.remove(self._parents[0])
-
-        value.children.append(self)
+    _parents_container = ParentContainer
+    _parents_name = 'parent'
 
     def find_root(self):
         """Finds the root node.
@@ -84,7 +67,7 @@ class TreeNode(Node):
         >>> assert node1a1.find_root() == node1
         """
         if self.parent:
-            return self._parents.find(parent=None)
+            return self.parent.find(parent=None)
 
         return self
 

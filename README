@@ -1,6 +1,11 @@
 Pynu - Python Node Utilities
+============================
 
 This library provides utility classes that offer basic graph tree traversal
 and manipulation functionality.
 
-Documentation is available at http://packages.python.org/Pynu/ .
+* Documentation: http://packages.python.org/Pynu/ .
+
+* Source: http://github.com/bebraw/pynu
+
+* Issue Tracker: http://github.com/bebraw/pynu/issues

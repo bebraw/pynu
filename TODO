@@ -1,7 +1,9 @@
+TODO
+====
+
 -add Graph class and generic find (node.graph.find(value=13),
 node.tree.find(value=13) ?)
+
 -implement shortest path algo (Dijkstra) (shortest_path(node1, node2)) ? ->
 this needs edge weights! -> add additional structure that allows to set them?
 it would be possible to expect that each edge has weight of 1 by default
--add proper long_description to setup.py like at
-http://github.com/cburroughs/pep8.py/blob/master/setup.py

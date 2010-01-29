@@ -20,17 +20,32 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 from setuptools import setup
 import pynu
 
+
+def long_description():
+    description_files = ('README', 'CHANGELOG', )
+
+    file_contents = list()
+    for file in description_files:
+        file_contents.append(open(file).read())
+
+    return '\n\n'.join(file_contents)
+
 setup(name='Pynu',
     version=pynu.__version__,
     description='Pynu provides utility classes that offer basic graph tree \
 traversal and manipulation functionality.',
-    #long_description=pynu.__doc__,
+    long_description=long_description(),
     author=pynu.__author__,
     author_email='bebraw@gmail.com',
     url='http://github.com/bebraw/pynu',
     license='GPLv3',
+    keywords=['graph', 'nodes', ],
     packages=['pynu', ],
     package_dir={'pynu': 'pynu', },
+    install_requires=[
+        'setuptools',
+        # -*- Extra requirements: -*-
+    ],
     data_files=[('readme', ['README', ]), ('todo', ['TODO', ]), ],
       classifiers=[
           'Development Status :: 3 - Alpha',

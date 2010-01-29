@@ -236,6 +236,8 @@ class NodeContainer(object):
         "node.parents.find" is invoked, it goes through all parents beginning
         from the parents of the given node.
 
+        Default case
+
         >>> node1, node2, node3, node4 = Node(), Node(), Node(), Node()
         >>>
         >>> node1.children = (node2, node3)
@@ -271,6 +273,21 @@ class NodeContainer(object):
         No result
 
         >>> assert node2.parents.find(color='red') == None
+
+        Cyclic case
+
+        >>> node1, node2 = Node(), Node()
+        >>>
+        >>> node1.children = node2
+        >>> node2.children = node1
+        >>>
+        >>> node1.name = 'joe'
+        >>> node2.name = 'jack'
+
+        Single argument, single result
+
+        >>> assert node1.children.find(name='joe') == node1
+        >>> assert node1.children.find(name='jack') == node2
         """
         found_nodes = self._recursion(kvargs, [], [])
 

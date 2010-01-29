@@ -1,6 +1,5 @@
 -add generic find (node.find(value=13)) that finds from all!
 -implement shortest path algo (Dijkstra) (short_path(node1, node2))
--make sure find does not fail on cyclic cases
 -make sure it's not possible to append to a TreeNode in such a way that causes
 a loop
 -add proper long_description to setup.py like at

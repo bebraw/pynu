@@ -3,6 +3,6 @@
 -make sure find does not fail on cyclic cases
 -make sure it's not possible to append to a TreeNode in such a way that causes
 a loop
--make code pep8 compatible
 -add proper long_description to setup.py like at
 http://github.com/cburroughs/pep8.py/blob/master/setup.py
+-derive NodeContainer from object and implement __setattr__, __getattr__

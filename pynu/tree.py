@@ -92,21 +92,10 @@ class TreeNode(Node):
         >>> assert node1.find_root() == None
         >>> assert node2.find_root() == None
         """
-        node = self.parent
+        if self.parent:
+            return self._parents.find(parent=None)
 
-        if node is None:
-            return self
-
-        checked_nodes = set()
-        while node.parent:
-            node = node.parent
-
-            if node in checked_nodes:
-                return
-
-            checked_nodes.add(node)
-
-        return node
+        return self
 
     def walk(self):
         """Walks through the nodes beginning from the current one in preorder.

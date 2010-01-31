@@ -22,7 +22,7 @@ import pynu
 
 
 def long_description():
-    description_files = ('README', 'CHANGELOG', )
+    description_files = ('README', 'docs/changelog', )
 
     file_contents = list()
     for file in description_files:

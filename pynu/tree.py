@@ -35,7 +35,6 @@ from node import Node
 
 # test behavior of remove with chaining!
 
-# figure out how to state that children and parent are complementary!
 class TreeNode(Node):
     _types = {'children': 'parent', }
 

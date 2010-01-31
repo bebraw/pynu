@@ -141,8 +141,8 @@ class Connections(list):
         >>> assert node3 in node1.children
         """
         for item in items:
-            if item not in self._nodes[type]:
-                self._nodes[type].append(item)
+            if item not in self:
+                super(Connections, self).append(item)
 
     def remove(self, *items):
         """Removes given items from container.
@@ -241,15 +241,16 @@ class Connections(list):
         >>> assert node1.children.find(name='joe') == node1
         >>> assert node1.children.find(name='jack') == node2
         """
-        found_nodes = self._recursion(kvargs, [], [])
+        found_nodes = self._recursion(rules, [], [])
 
         if len(found_nodes) > 0:
             return found_nodes[0] if len(found_nodes) == 1 else found_nodes
 
     def _recursion(self, search_clauses, found_nodes, visited_nodes):
-        visited_nodes.append(self.owner)
+        #visited_nodes.append(self.owner) (no ref to owner anymore) # XXX
+        return None
 
-        for node in self._nodes:
+        for node in self:
             try:
                 if self._all_match(node, search_clauses):
                     found_nodes.append(node)
@@ -281,11 +282,10 @@ class Connections(list):
 
 class AccumulatorFacade(object):
 
-    def __init__(self, type_manager, nodes, type):
+    def __init__(self, type_manager, nodes):
         assert isinstance(nodes, list)
         self._type_manager = type_manager
         self._nodes = Connections(nodes)
-        self._type = type
 
     def __len__(self):
         return len(self._nodes)
@@ -299,7 +299,7 @@ class AccumulatorFacade(object):
     def __getitem__(self, index):
         return self._nodes[index]
 
-    def __getattribute__(self, name):
+    def __getattr__(self, name):
         type = self._type_manager.get_type(name)
 
         if type:
@@ -311,8 +311,11 @@ class AccumulatorFacade(object):
             return AccumulatorFacade(self._type_manager, nodes, type)
 
     def __setattr__(self, name, value):
-        for node in self._nodes:
-            setattr(node, name, value)
+        if '_nodes' in self.__dict__:
+            for node in self._nodes:
+                setattr(node, name, value)
+        else:
+            super(AccumulatorFacade, self).__setattr__(name, value)
 
     def find(self, **rules):
         self._nodes.find(**rules)
@@ -330,38 +333,45 @@ class ConnectionsFacade(object):
         self._type = type
 
     def __len__(self):
-        return len(self._connections[self._type])
+        return len(self._connections[self._type.name])
 
     def __eq__(self, other):
-        return self._connections[self._type] == other
+        return self._connections[self._type.name] == other
 
     def __neq__(self, other):
-        return self._connections[self._type] != other
+        return self._connections[self._type.name] != other
 
-    def __getattribute__(self, name):
+    def __getattr__(self, name):
+        if '_type_manager' not in self.__dict__:
+            return
+
         type = self._type_manager.get_type(name)
 
         if type:
             nodes = list()
 
-            for node in self._connections[self._type]:
+            for node in self._connections[self._type.name]:
                 nodes.append(getattr(node, type))
 
-            return AccumulatorFacade(self._type_manager, nodes, type)
-
-    def __getitem__(self, index):
-        return self._connections[self._type][index]
+            return AccumulatorFacade(self._type_manager, nodes)
 
     def __setattr__(self, name, value):
-        for node in self._connections[self._type]:
-            setattr(node, name, value)
+        if '_connections' in self.__dict__ and '_type' in self.__dict__ and \
+                self._type.name in self._connections:
+            for node in self._connections[self._type.name]:
+                setattr(node, name, value)
+        else:
+            super(ConnectionsFacade, self).__setattr__(name, value)
+
+    def __getitem__(self, index):
+        return self._connections[self._type.name][index]
 
     def empty(self):
-        for node in self._connections[self._type]:
+        for node in self._connections[self._type.name]:
             complement_connection = getattr(node, self._type.complement)
             complement_connection.remove(node)
 
-        self._connections[self._type].empty()
+        self._connections[self._type.name].empty()
 
     def append(self, *items):
         """
@@ -373,19 +383,19 @@ class ConnectionsFacade(object):
         >>> assert node2 in node1.children
         >>> assert node1 in node2.parents
         """
-        self._connections[self._type].append(*items)
+        self._connections[self._type.name].append(*items)
 
         for item in items:
             item._connections[self._type.complement].append(self._owner)
 
     def remove(self, *items):
-        self._connections[self._type].remove(*items)
+        self._connections[self._type.name].remove(*items)
 
         for item in items:
             item._connections.remove[self._type.complement](self._owner)
 
     def find(self, **rules):
-        self._connections[self._type].find(**rules)
+        self._connections[self._type.name].find(**rules)
 
 
 class TypeManager(object):
@@ -426,17 +436,14 @@ class Node(object):
         for type in self._type_manager.types:
             self._connections[type] = Connections()
 
-    def __getattribute__(self, name):
-        if name in ('_type_manager', '_types'):
-            return super(Node, self).__getattribute__(name)
-
+    def __getattr__(self, name):
         type = self._type_manager.get_type(name)
 
         if type:
             return ConnectionsFacade(self, self._type_manager,
                 self._connections, type)
 
-        return super(Node, self).__getattribute__(name)
+        return super(Node, self).__getattr__(name)
 
     def __setattr__(self, name, value):
         """ Assignment of children/parents resets previous content and creates
@@ -468,7 +475,9 @@ class Node(object):
         def connection_template():
             if hasattr(self, name):
                 connection = getattr(self, name)
-                connection._set_content(value)
+
+                if connection:
+                    connection._set_content(value)
             else:
                 super(Node, self).__setattr__(name, value)
 

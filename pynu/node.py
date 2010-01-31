@@ -30,7 +30,9 @@ import re
 # TODO: test Connections directly!
 class Connections(list):
 
-    def __init__(self, nodes=[]):
+    def __init__(self, owner, nodes=[]):
+        self._owner = owner
+
         super(Connections, self).__init__(nodes)
 
     def __eq__(self, other):
@@ -49,7 +51,7 @@ class Connections(list):
         if len(self) == 0 and other is None:
             return True
 
-        return self == other
+        return super(Connections, self).__eq__(other)
 
     def ___neq__(self, other):
         """Checks if container contents are not equal to other.
@@ -182,7 +184,7 @@ class Connections(list):
             if item in self._nodes[type]:
                 self._nodes[type].remove(item)
 
-    def find(self, **rules):
+    def find(self, connection_type, **rules):
         """Finds nodes matching to given rules. The idea is that the method
         seeks based on the type of the container. For example in case
         "node.parents.find" is invoked, it goes through all parents beginning
@@ -241,32 +243,33 @@ class Connections(list):
         >>> assert node1.children.find(name='joe') == node1
         >>> assert node1.children.find(name='jack') == node2
         """
-        found_nodes = self._recursion(rules, [], [])
+        found_nodes = self._recursion(rules, [], [], connection_type)
 
         if len(found_nodes) > 0:
             return found_nodes[0] if len(found_nodes) == 1 else found_nodes
 
-    def _recursion(self, search_clauses, found_nodes, visited_nodes):
-        #visited_nodes.append(self.owner) (no ref to owner anymore) # XXX
-        return None
+    def _recursion(self, rules, found_nodes, visited_nodes,
+            connection_type):
+        visited_nodes.append(self._owner)
 
         for node in self:
             try:
-                if self._all_match(node, search_clauses):
+                if self._all_match(node, rules):
                     found_nodes.append(node)
             except AttributeError:
                 pass
 
             if node not in visited_nodes:
-                node_container = getattr(node, self.name)
+                facade = getattr(node, connection_type)
 
-                node_container._recursion(search_clauses, found_nodes,
-                    visited_nodes)
+                # XXX: utter nastiness. figure out a better way
+                facade._connections[facade._connection_type.name]._recursion(
+                    rules, found_nodes, visited_nodes, connection_type)
 
         return found_nodes
 
-    def _all_match(self, node, search_clauses):
-        for wanted_attribute, wanted_value in search_clauses.items():
+    def _all_match(self, node, rules):
+        for wanted_attribute, wanted_value in rules.items():
             attribute_value = getattr(node, wanted_attribute)
 
             if isinstance(wanted_value, str):
@@ -300,15 +303,16 @@ class AccumulatorFacade(object):
         return self._nodes[index]
 
     def __getattr__(self, name):
-        type = self._type_manager.get_type(name)
+        connection_type = self._type_manager.get_type(name)
 
-        if type:
+        if connection_type:
             nodes = list()
 
             for node in self._nodes:
-                nodes.append(getattr(node, type))
+                nodes.append(getattr(node, connection_type))
 
-            return AccumulatorFacade(self._type_manager, nodes, type)
+            return AccumulatorFacade(self._type_manager, nodes,
+                connection_type)
 
     def __setattr__(self, name, value):
         if '_nodes' in self.__dict__:
@@ -317,61 +321,61 @@ class AccumulatorFacade(object):
         else:
             super(AccumulatorFacade, self).__setattr__(name, value)
 
-    def find(self, **rules):
-        self._nodes.find(**rules)
-
+# TODO: test and fix simple assigment (ie. node1.children = node2)
 # handle accum set (ie. node.parents.parents.color = 'blue' should set color of
 # all belonging to that selection)
 # handle node.parents.parents.find(color='blue')
 class ConnectionsFacade(object):
 
-    def __init__(self, owner, type_manager, connections, type):
+    def __init__(self, owner, type_manager, connections, connection_type):
         assert isinstance(connections, dict)
         self._owner = owner
         self._type_manager = type_manager
         self._connections = connections
-        self._type = type
+        self._connection_type = connection_type
 
     def __len__(self):
-        return len(self._connections[self._type.name])
+        return len(self._connections[self._connection_type.name])
 
     def __eq__(self, other):
-        return self._connections[self._type.name] == other
+        return self._connections[self._connection_type.name] == other
 
     def __neq__(self, other):
-        return self._connections[self._type.name] != other
+        return self._connections[self._connection_type.name] != other
 
     def __getattr__(self, name):
         if '_type_manager' not in self.__dict__:
             return
 
-        type = self._type_manager.get_type(name)
+        connection_type = self._type_manager.get_type(name)
 
-        if type:
+        if connection_type:
             nodes = list()
 
-            for node in self._connections[self._type.name]:
-                nodes.append(getattr(node, type))
+            for node in self._connections[self._connection_type.name]:
+                nodes.append(getattr(node, connection_type))
 
             return AccumulatorFacade(self._type_manager, nodes)
 
     def __setattr__(self, name, value):
-        if '_connections' in self.__dict__ and '_type' in self.__dict__ and \
-                self._type.name in self._connections:
-            for node in self._connections[self._type.name]:
+        if '_connections' in self.__dict__ and \
+                '_connection_type' in self.__dict__ and \
+                self._connection_type.name in self._connections:
+            for node in self._connections[self._connection_type.name]:
                 setattr(node, name, value)
         else:
             super(ConnectionsFacade, self).__setattr__(name, value)
 
     def __getitem__(self, index):
-        return self._connections[self._type.name][index]
+        return self._connections[self._connection_type.name][index]
 
     def empty(self):
-        for node in self._connections[self._type.name]:
-            complement_connection = getattr(node, self._type.complement)
+        for node in self._connections[self._connection_type.name]:
+            complement_connection = getattr(node,
+                self._connection_type.complement)
             complement_connection.remove(node)
 
-        self._connections[self._type.name].empty()
+        self._connections[self._connection_type.name].empty()
 
     def append(self, *items):
         """
@@ -383,19 +387,22 @@ class ConnectionsFacade(object):
         >>> assert node2 in node1.children
         >>> assert node1 in node2.parents
         """
-        self._connections[self._type.name].append(*items)
+        self._connections[self._connection_type.name].append(*items)
 
         for item in items:
-            item._connections[self._type.complement].append(self._owner)
+            item._connections[self._connection_type.complement].append(
+                self._owner)
 
     def remove(self, *items):
-        self._connections[self._type.name].remove(*items)
+        self._connections[self._connection_type.name].remove(*items)
 
         for item in items:
-            item._connections.remove[self._type.complement](self._owner)
+            item._connections.remove[self._connection_type.complement](
+                self._owner)
 
     def find(self, **rules):
-        self._connections[self._type.name].find(**rules)
+        return self._connections[self._connection_type.name].find(
+            self._connection_type.name, **rules)
 
 
 class TypeManager(object):
@@ -434,7 +441,7 @@ class Node(object):
 
         self._connections = dict()
         for type in self._type_manager.types:
-            self._connections[type] = Connections()
+            self._connections[type] = Connections(owner=self)
 
     def __getattr__(self, name):
         type = self._type_manager.get_type(name)

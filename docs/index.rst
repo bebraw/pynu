@@ -16,7 +16,7 @@ API Documentation
     graph_api
     tree_api
 
-User Guide
+User Documentation
 ----------
 
 .. toctree::
@@ -24,7 +24,7 @@ User Guide
 
     changelog
 
-Developer Guide
+Developer Documentation
 ---------------
 
 .. toctree::

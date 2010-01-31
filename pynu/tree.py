@@ -43,8 +43,8 @@ class TreeNode(Node):
 
         >>> node1, node1a = TreeNode(), TreeNode()
         >>> node1b, node1a1 = TreeNode(), TreeNode()
-        >>> node1.children.append(node1a, node1b)
-        >>> node1a.children.append(node1a1)
+        >>> node1.children = (node1a, node1b)
+        >>> node1a.children = node1a1
         >>>
         >>> assert node1.find_root() == node1
         >>> assert node1a.find_root() == node1

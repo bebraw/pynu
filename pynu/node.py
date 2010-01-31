@@ -66,28 +66,6 @@ class Connections(list):
         """
         return not self == other
 
-    def _set_content(self, content):
-        """Sets content of the container.
-
-        >>> node1, node2 = Node(), Node()
-        >>> node1.children._set_content(node2)
-        >>>
-        >>> assert node1.children == [node2, ]
-        >>> assert node2.parents == [node1, ]
-        >>>
-        >>> node3 = Node()
-        >>> node1.children._set_content(node3)
-        >>>
-        >>> assert node1.children == [node3, ]
-        >>> assert node2.parents == None
-        """
-        self.empty()
-
-        if hasattr(content, '__iter__'):
-            self.append(*content)
-        else:
-            self.append(content)
-
     def empty(self):
         """Empties container content.
 
@@ -404,6 +382,28 @@ class ConnectionsFacade(object):
         return self._connections[self._connection_type.name].find(
             self._connection_type.name, **rules)
 
+    def _set_content(self, content):
+        """Sets content of the container.
+
+        >>> node1, node2 = Node(), Node()
+        >>> node1.children._set_content(node2)
+        >>>
+        >>> assert node1.children == [node2, ]
+        >>> assert node2.parents == [node1, ]
+        >>>
+        >>> node3 = Node()
+        >>> node1.children._set_content(node3)
+        >>>
+        >>> assert node1.children == [node3, ]
+        >>> assert node2.parents == None
+        """
+        self.empty()
+
+        if hasattr(content, '__iter__'):
+            self.append(*content)
+        else:
+            self.append(content)
+
 
 class TypeManager(object):
 
@@ -483,8 +483,7 @@ class Node(object):
             if hasattr(self, name):
                 connection = getattr(self, name)
 
-                if connection:
-                    connection._set_content(value)
+                connection._set_content(value)
             else:
                 super(Node, self).__setattr__(name, value)
 

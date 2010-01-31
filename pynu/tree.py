@@ -19,37 +19,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 """
-from node import Node, NodeContainer
+from node import Node
 
+# parent = file.parent
+# parent.find (find in container)
+# parent.children (children in node) -> add property for this
+# -> general problem! applies for children too (needs parents property)
 
-class ParentContainer(NodeContainer):
+# parent.parent.parent -> ok!
+# parents.parents.parents -> ok! (each step accumulates!)
+# -> container(container(container()))
+# what about parents.children.parents? -> ok
 
-    def _set_content(self, content):
-        """Sets content of the container. Note that the new content has to be
-        a TreeNode.
+# test remove with chaining!
 
-        >>> node1, node2 = TreeNode(), TreeNode()
-        >>> node2.parent._set_content(node1)
-        >>>
-        >>> assert node1.children == [node2, ]
-        >>> assert node2.parent == [node1, ]
-        >>>
-        >>> node3 = TreeNode()
-        >>> node2.parent._set_content(node3)
-        >>>
-        >>> assert node1.children == None
-        >>> assert node2.parent == [node3, ]
-        >>> assert node3.children == [node2, ]
-        """
-        assert isinstance(content, TreeNode)
+# test behavior of remove with chaining!
 
-        self.empty()
-        self.append(content)
-
-
+# figure out how to state that children and parent are complementary!
 class TreeNode(Node):
-    _parents_container = ParentContainer
-    _parents_name = 'parent'
+    _types = {'children': 'parent', }
 
     def find_root(self):
         """Finds the root node.
@@ -96,3 +84,7 @@ class TreeNode(Node):
 
         for child_walk_node in _walk(self.children):
             yield child_walk_node
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

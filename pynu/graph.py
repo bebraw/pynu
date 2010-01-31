@@ -22,5 +22,13 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 from node import Node
 
 
+class BidirectionalGraphNode(Node):
+    _types = {'children': 'parents', }
+
+
 class GraphNode(Node):
-    pass
+    _types = {'connections': None, }
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

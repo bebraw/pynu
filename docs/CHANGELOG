@@ -1,8 +1,10 @@
 Changelog
 =========
 
-0.1.2 (2010-0x-xx)
+0.2.0 (2010-0x-xx)
 ------------------
+
+* Renamed GraphNode as DirectedGraphNode
 
 0.1.1 (2010-01-29)
 ------------------

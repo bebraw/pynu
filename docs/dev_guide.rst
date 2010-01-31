@@ -1,4 +1,7 @@
-Release procedure
+Developer's Guide
+=================
+
+Release Procedure
 -----------------
 
 1. Make sure all tests pass.
@@ -12,6 +15,6 @@ Release procedure
 9. Push tags (git push --tags).
 10. Bump release number (by 0.0.1 normally) and add -dev suffix to it.
 
-* = This requires http://pypi.python.org/pypi/collective.checkdocs/ . As
+\* = This requires http://pypi.python.org/pypi/collective.checkdocs/ . As
 this project uses setuptools instead of distutils, it will give a harmless
 warning about unknown distribution option.

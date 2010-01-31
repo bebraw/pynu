@@ -124,6 +124,13 @@ class ConnectionsFacade(object):
         >>>
         >>> assert node2 in node1.children
         >>> assert node1 in node2.parents
+
+        Cycles are allowed by default
+
+        >>> node1.parents.append(node2)
+        >>>
+        >>> assert node2.children[0] == node1
+        >>> assert node1.parents[0] == node2
         """
         self._connections[self._connection_type.name].append(*items)
 
@@ -139,6 +146,64 @@ class ConnectionsFacade(object):
                 self._owner)
 
     def find(self, **rules):
+        """Finds nodes matching to given rules. The idea is that the method
+        seeks based on the type of the container. For example in case
+        "node.parents.find" is invoked, it goes through all parents beginning
+        from the parents of the given node.
+
+        Default case
+
+        >>> node1, node2, node3, node4 = Node(), Node(), Node(), Node()
+        >>>
+        >>> node1.children = (node2, node3)
+        >>> node3.parents.append(node4)
+        >>>
+        >>> node1.name = 'joe'
+        >>> node1.value = 13
+        >>> node2.color = 'blue'
+        >>> node3.color = 'black'
+        >>> node4.value = 13
+
+        Single argument, single result
+
+        >>> assert node2.parents.find(name='joe') == node1
+        >>> assert node1.children.find(color='blue') == node2
+
+        Single argument, multiple results
+
+        >>> assert node3.parents.find(value=13) == [node1, node4]
+
+        Multiple arguments, single result
+
+        >>> assert node2.parents.find(name='joe', value=13) == node1
+
+        Regex argument (match anything except newline)
+
+        >>> assert node2.parents.find(name='.') == node1
+
+        Regex argument (match from beginning)
+
+        >>> assert node1.children.find(color='^bl') == [node2, node3]
+
+        No result
+
+        >>> assert node2.parents.find(color='red') == None
+
+        Cyclic case
+
+        >>> node1, node2 = Node(), Node()
+        >>>
+        >>> node1.children = node2
+        >>> node2.children = node1
+        >>>
+        >>> node1.name = 'joe'
+        >>> node2.name = 'jack'
+
+        Single argument, single result
+
+        >>> assert node1.children.find(name='joe') == node1
+        >>> assert node1.children.find(name='jack') == node2
+        """
         return self._connections[self._connection_type.name].find(
             self._connection_type.name, **rules)
 

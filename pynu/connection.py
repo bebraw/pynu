@@ -21,10 +21,12 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 """
 import re
 
-# TODO: test Connections directly!
+
+# note that this behaves like a set expect that it keeps retains order
+# -> use OrderedSet instead?
 class Connections(list):
 
-    def __init__(self, owner, nodes=[]):
+    def __init__(self, owner=None, nodes=[]):
         self._owner = owner
 
         super(Connections, self).__init__(nodes)
@@ -55,173 +57,110 @@ class Connections(list):
 
         >>> con1, con2 = Connections(), Connections()
         >>>
-        >>> assert con1 == None
-        >>>
         >>> con1.append('foo')
-        >>> con2.append('foo')
-        >>>
-        >>> assert con1 == con2
-        >>>
         >>> con2.append('bar')
         >>>
-        >>> assert not con1 == con2
+        >>> assert con1 != con2
         """
         return not self == other
 
     def empty(self):
-        """Empties container content.
+        """Empties content.
 
-        >>> node1, node2 = Node(), Node()
+        >>> con1, con2 = Connections(), Connections()
         >>>
-        >>> node1.children = node2
-        >>> node1.children.empty()
+        >>> con1.append(con2)
         >>>
-        >>> assert len(node1.children) == 0
-        >>> assert len(node2.parents) == 0
+        >>> assert len(con1) == 1
+        >>>
+        >>> con1.empty()
+        >>>
+        >>> assert len(con1) == 0
         """
         for node in self:
             self.remove(node)
 
     def append(self, *items):
-        """Appends given items to container.
+        """Appends given items connections.
 
         Regular case
 
-        >>> node1, node2 = Node(), Node()
+        >>> con1, con2 = Connections(), Connections()
         >>>
-        >>> node1.children = node2
+        >>> con1.append(con2)
         >>>
-        >>> assert node1.children[0] == node2
-        >>> assert node2.parents[0] == node1
+        >>> assert con1[0] == con2
 
-        Cycles are allowed by default
+        Append multiple times (retains only one reference to target!)
 
-        >>> node1.parents.append(node2)
+        >>> con1, con2 = Connections(), Connections()
+        >>> con1.append(con2)
+        >>> con1.append(con2)
         >>>
-        >>> assert node2.children[0] == node1
-        >>> assert node1.parents[0] == node2
-
-        Append multiple times
-
-        >>> node1, node2 = Node(), Node()
-        >>> node1.children.append(node2)
-        >>> node1.children.append(node2)
-        >>>
-        >>> assert node1.children[0] == node2
-        >>> assert node2.parents[0] == node1
-        >>> assert len(node1.children) == 1
-        >>> assert len(node2.parents) == 1
+        >>> assert con1[0] == con2
+        >>> assert len(con1) == 1
 
         Append multiple at once
 
-        >>> node1, node2, node3 = Node(), Node(), Node()
+        >>> con1, con2, con3 = Connections(), Connections(), Connections()
         >>>
-        >>> node1.children = (node2, node3)
+        >>> con1.append(con2, con3)
         >>>
-        >>> assert len(node1.children) == 2
-        >>> assert node2 in node1.children
-        >>> assert node3 in node1.children
+        >>> assert len(con1) == 2
+        >>> assert con2 in con1
+        >>> assert con3 in con1
         """
         for item in items:
-            if item not in self:
-                super(Connections, self).append(item)
+            for node in self:
+                if item is node:
+                    return
+
+            super(Connections, self).append(item)
 
     def remove(self, *items):
-        """Removes given items from container.
+        """Removes given items from connections.
 
         Regular case
 
-        >>> node1, node2 = Node(), Node()
+        >>> con1, con2 = Connections(), Connections()
         >>>
-        >>> node1.children = node2
-        >>> node1.children.remove(node2)
+        >>> con1.append(con2)
+        >>> con1.remove(con2)
         >>>
-        >>> assert len(node1.children) == 0
-        >>> assert len(node2.parents) == 0
+        >>> assert len(con1) == 0
 
         Remove multiple times
 
-        >>> node1, node2 = Node(), Node()
+        >>> con1, con2 = Connections(), Connections()
         >>>
-        >>> node1.parents = node2
-        >>> node1.parents.remove(node2)
-        >>> node1.parents.remove(node2)
-        >>> node1.parents.remove(node2)
+        >>> con1.append(con2)
+        >>> con1.remove(con2)
+        >>> con1.remove(con2)
+        >>> con1.remove(con2)
         >>>
-        >>> assert len(node1.parents) == 0
-        >>> assert len(node2.children) == 0
+        >>> assert len(con1) == 0
 
         Remove multiple at once
 
-        >>> node1, node2, node3 = Node(), Node(), Node()
+        >>> con1, con2, con3 = Connections(), Connections(), Connections()
         >>>
-        >>> node1.children = (node2, node3)
-        >>> node1.children.remove(node2, node3)
+        >>> con1.append(con2, con3)
         >>>
-        >>> assert len(node1.children) == 0
+        >>> assert len(con1) == 2
+        >>>
+        >>> con1.remove(con2, con3)
+        >>>
+        >>> assert len(con1) == 0
         """
         for item in items:
-            if item in self._nodes[type]:
-                self._nodes[type].remove(item)
+            if item in self:
+                super(Connections, self).remove(item)
 
     def find(self, connection_type, **rules):
-        """Finds nodes matching to given rules. The idea is that the method
-        seeks based on the type of the container. For example in case
-        "node.parents.find" is invoked, it goes through all parents beginning
-        from the parents of the given node.
+        """Finds and returns content matching to given rules.
 
-        Default case
-
-        >>> node1, node2, node3, node4 = Node(), Node(), Node(), Node()
-        >>>
-        >>> node1.children = (node2, node3)
-        >>> node3.parents.append(node4)
-        >>>
-        >>> node1.name = 'joe'
-        >>> node1.value = 13
-        >>> node2.color = 'blue'
-        >>> node3.color = 'black'
-        >>> node4.value = 13
-
-        Single argument, single result
-
-        >>> assert node2.parents.find(name='joe') == node1
-        >>> assert node1.children.find(color='blue') == node2
-
-        Single argument, multiple results
-
-        >>> assert node3.parents.find(value=13) == [node1, node4]
-
-        Multiple arguments, single result
-
-        >>> assert node2.parents.find(name='joe', value=13) == node1
-
-        Regex argument (match anything except newline)
-
-        >>> assert node2.parents.find(name='.') == node1
-
-        Regex argument (match from beginning)
-
-        >>> assert node1.children.find(color='^bl') == [node2, node3]
-
-        No result
-
-        >>> assert node2.parents.find(color='red') == None
-
-        Cyclic case
-
-        >>> node1, node2 = Node(), Node()
-        >>>
-        >>> node1.children = node2
-        >>> node2.children = node1
-        >>>
-        >>> node1.name = 'joe'
-        >>> node2.name = 'jack'
-
-        Single argument, single result
-
-        >>> assert node1.children.find(name='joe') == node1
-        >>> assert node1.children.find(name='jack') == node2
+        XXX: figure out how to test connection_type properly! should this be
+        a class of its own even? Finder?
         """
         found_nodes = self._recursion(rules, [], [], connection_type)
 

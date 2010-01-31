@@ -1,0 +1,20 @@
+Changelog
+=========
+
+0.2.0 (2010-0x-xx)
+------------------
+
+* Renamed GraphNode as DirectedGraphNode
+
+0.1.1 (2010-01-29)
+------------------
+
+* Made code compatible with PEP 8.
+* Removed extraneous methods from NodeContainer (ie. children/parents
+  attribute).
+
+
+0.1.0 (2010-01-27)
+------------------
+
+* Initial Release

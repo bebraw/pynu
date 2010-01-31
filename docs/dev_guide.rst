@@ -5,7 +5,8 @@ Release Procedure
 -----------------
 
 1. Make sure all tests pass.
-2. Make sure the code is PEP 8 compatible.
+2. Make sure the code is `PEP 8 <http://www.python.org/dev/peps/pep-0008/>`_
+   compatible.
 3. Make sure long_description is valid ("python setup.py checkdocs")*.
 4. Remove -dev suffix of __version__ at __init__.py.
 5. Add proper release date to CHANGELOG.

@@ -41,8 +41,6 @@ class TreeNode(Node):
     def find_root(self):
         """Finds the root node.
 
-        Regular case
-
         >>> node1, node1a = TreeNode(), TreeNode()
         >>> node1b, node1a1 = TreeNode(), TreeNode()
         >>> node1.children.append(node1a, node1b)

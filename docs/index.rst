@@ -1,5 +1,20 @@
-Overview of Pynu (Python Node Utilities)
-========================================
+===========================
+Pynu - Node Utility Library
+===========================
+
+:Author: `Juho Vepsäläinen <http://nixtu.blogspot.com>`_
+:Version: Pynu |version|
+:Date: |today|
+:Homepage: `Pynu Homepage`_
+:License: `GPLv3 License`_
+:Contact: bebraw@gmail.com
+
+.. _Pynu Homepage: http://github.com/bebraw/pynu
+.. _GPLv3 License: http://www.gnu.org/licenses/gpl-3.0.html
+
+
+.. module:: mock
+   :synopsis: Mock object and testing library.
 
 The library offers two helper classes, DirectedGraphNode and TreeNode. TreeNode
 can be considered to be a special case of a DirectedGraphNode. A TreeNode may
@@ -17,7 +32,7 @@ API Documentation
     tree_api
 
 User Documentation
-----------
+------------------
 
 .. toctree::
     :maxdepth: 2
@@ -25,7 +40,7 @@ User Documentation
     changelog
 
 Developer Documentation
----------------
+-----------------------
 
 .. toctree::
     :maxdepth: 2

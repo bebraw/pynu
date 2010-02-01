@@ -46,8 +46,7 @@ traversal and manipulation functionality.',
         'setuptools',
         # -*- Extra requirements: -*-
     ],
-    data_files=[('readme', ['README', ]), ('todo', ['TODO', ]), ],
-      classifiers=[
+    classifiers=[
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: GNU General Public License (GPL)',

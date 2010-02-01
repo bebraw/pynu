@@ -25,7 +25,7 @@ from node import Node
 class TreeNode(Node):
     _types = {'children': 'parent', }
 
-    def find_root(self):
+    def root(self):
         """Finds the root node.
 
         >>> node1, node1a = TreeNode(), TreeNode()
@@ -33,10 +33,10 @@ class TreeNode(Node):
         >>> node1.children = (node1a, node1b)
         >>> node1a.children = node1a1
         >>>
-        >>> assert node1.find_root() == node1
-        >>> assert node1a.find_root() == node1
-        >>> assert node1b.find_root() == node1
-        >>> assert node1a1.find_root() == node1
+        >>> assert node1.root() == node1
+        >>> assert node1a.root() == node1
+        >>> assert node1b.root() == node1
+        >>> assert node1a1.root() == node1
         """
         if self.parent:
             return self.parent.find(parent=None)

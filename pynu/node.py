@@ -22,10 +22,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 from connection import Connections
 from facade import ConnectionsFacade
 
-# TODO: add support for custom attrs at append? -> node1.children.append(node2,
-# weight=0.5) -> adds new child for node1. connection has 0.5 as weight
-# how to adjust/access connection attrs? <get connection>.<attr>
-
 
 class TypeManager(object):
 
@@ -54,7 +50,6 @@ class TypeManager(object):
         return self._types.keys()
 
 
-# TODO: test _types via concrete nodes!
 class Node(object):
     _types = {}
 

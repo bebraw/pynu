@@ -21,19 +21,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 """
 from node import Node
 
-# parent = file.parent
-# parent.find (find in container)
-# parent.children (children in node) -> add property for this
-# -> general problem! applies for children too (needs parents property)
-
-# parent.parent.parent -> ok!
-# parents.parents.parents -> ok! (each step accumulates!)
-# -> container(container(container()))
-# what about parents.children.parents? -> ok
-
-# test remove with chaining!
-
-# test behavior of remove with chaining!
 
 class TreeNode(Node):
     _types = {'children': 'parent', }

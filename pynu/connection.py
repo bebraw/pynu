@@ -22,8 +22,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 import re
 
 
-# note that this behaves like a set expect that it keeps retains order
-# -> use OrderedSet instead?
 class Connections(list):
 
     def __init__(self, owner=None, nodes=[]):
@@ -156,11 +154,11 @@ class Connections(list):
             if item in self:
                 super(Connections, self).remove(item)
 
+
+class Finder(object):
+
     def find(self, connection_type, **rules):
         """Finds and returns content matching to given rules.
-
-        XXX: figure out how to test connection_type properly! should this be
-        a class of its own even? Finder?
         """
         found_nodes = self._recursion(rules, [], [], connection_type)
 

@@ -211,7 +211,7 @@ class ConnectionsFacade(object):
 
         if self._connection_type.complement:
             for item in items:
-                item._connections.remove[self._connection_type.complement](
+                item._connections[self._connection_type.complement].remove(
                     self._owner)
 
     def _set_content(self, content):

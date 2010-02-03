@@ -13,14 +13,13 @@ Pynu - Node Utility Library
 .. _GPLv3 License: http://www.gnu.org/licenses/gpl-3.0.html
 
 
-.. module:: mock
-   :synopsis: Mock object and testing library.
+.. module:: pynu
+   :synopsis: Node and graph utility library
 
-The library offers two helper classes, DirectedGraphNode and TreeNode. TreeNode
-can be considered to be a special case of a DirectedGraphNode. A TreeNode may
-have only one parent at a time. In addition it provides functionality to find
-the root of the tree (find_root) and to walk through each node of the tree
-based on the node used as a pivot.
+Introduction
+------------
+
+TODO
 
 API Documentation
 -----------------

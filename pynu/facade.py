@@ -19,6 +19,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 """
+from connection import Connections
 
 
 class AccumulatorFacade(object):
@@ -36,6 +37,9 @@ class AccumulatorFacade(object):
 
     def __neq__(self, other):
         return self._nodes != other
+
+    def __call__(self, rules):
+        pass # TODO: (...parents('color=blue') ie. see jQuery
 
     def __getitem__(self, index):
         return self._nodes[index]
@@ -57,12 +61,10 @@ class AccumulatorFacade(object):
             for node in self._nodes:
                 setattr(node, name, value)
         else:
+            # TODO: set attr for _nodes
             super(AccumulatorFacade, self).__setattr__(name, value)
 
-# TODO: test and fix simple assigment (ie. node1.children = node2)
-# handle accum set (ie. node.parents.parents.color = 'blue' should set color of
-# all belonging to that selection)
-# handle node.parents.parents.find(color='blue')
+
 class ConnectionsFacade(object):
 
     def __init__(self, owner, type_manager, connections, connection_type):
@@ -81,71 +83,7 @@ class ConnectionsFacade(object):
     def __neq__(self, other):
         return self._connections[self._connection_type.name] != other
 
-    def __getattr__(self, name):
-        if '_type_manager' not in self.__dict__:
-            return
-
-        connection_type = self._type_manager.get_type(name)
-
-        if connection_type:
-            nodes = list()
-
-            for node in self._connections[self._connection_type.name]:
-                nodes.append(getattr(node, connection_type))
-
-            return AccumulatorFacade(self._type_manager, nodes)
-
-    def __setattr__(self, name, value):
-        if '_connections' in self.__dict__ and \
-                '_connection_type' in self.__dict__ and \
-                self._connection_type.name in self._connections:
-            for node in self._connections[self._connection_type.name]:
-                setattr(node, name, value)
-        else:
-            super(ConnectionsFacade, self).__setattr__(name, value)
-
-    def __getitem__(self, index):
-        return self._connections[self._connection_type.name][index]
-
-    def empty(self):
-        for node in self._connections[self._connection_type.name]:
-            complement_connection = getattr(node,
-                self._connection_type.complement)
-            complement_connection.remove(node)
-
-        self._connections[self._connection_type.name].empty()
-
-    def append(self, *items):
-        """
-
-        >>> node1, node2 = Node(), Node()
-        >>>
-        >>> node1.children.append(node2)
-        >>>
-        >>> assert node2 in node1.children
-        >>> assert node1 in node2.parents
-
-        Cycles are allowed by default
-
-        >>> node1.parents.append(node2)
-        >>>
-        >>> assert node2.children[0] == node1
-        >>> assert node1.parents[0] == node2
-        """
-        self._connections[self._connection_type.name].append(*items)
-
-        for item in items:
-            item._connections[self._connection_type.complement].append(
-                self._owner)
-
-    def remove(self, *items):
-        self._connections[self._connection_type.name].remove(*items)
-
-        for item in items:
-            item._connections.remove[self._connection_type.complement](
-                self._owner)
-
-    def find(self, **rules):
+    def __call__(self, rules):
         """Finds nodes matching to given rules. The idea is that the method
         seeks based on the type of the container. For example in case
         "node.parents.find" is invoked, it goes through all parents beginning
@@ -204,8 +142,74 @@ class ConnectionsFacade(object):
         >>> assert node1.children.find(name='joe') == node1
         >>> assert node1.children.find(name='jack') == node2
         """
-        return self._connections[self._connection_type.name].find(
-            self._connection_type.name, **rules)
+        #return self._connections[self._connection_type.name].find(
+        #    self._connection_type.name, **rules)
+        pass # TODO: (...parents('color=blue') ie. see jQuery
+
+    def __getattr__(self, name):
+        if '_type_manager' not in self.__dict__:
+            return
+
+        connection_type = self._type_manager.get_type(name)
+
+        if connection_type:
+            nodes = list()
+
+            for node in self._connections[self._connection_type.name]:
+                nodes.append(getattr(node, connection_type))
+
+            return AccumulatorFacade(self._type_manager, nodes)
+
+    def __setattr__(self, name, value):
+        if '_connections' in self.__dict__ and \
+                '_connection_type' in self.__dict__ and \
+                self._connection_type.name in self._connections:
+            for node in self._connections[self._connection_type.name]:
+                setattr(node, name, value)
+        else:
+            # TODO: set attr for _connections!
+            super(ConnectionsFacade, self).__setattr__(name, value)
+
+    def __getitem__(self, index):
+        return self._connections[self._connection_type.name][index]
+
+    def empty(self):
+        for node in self._connections[self._connection_type.name]:
+            complement_connection = getattr(node,
+                self._connection_type.complement)
+            complement_connection.remove(node)
+
+        self._connections[self._connection_type.name].empty()
+
+    def append(self, *items):
+        """
+
+        >>> node1, node2 = Node(), Node()
+        >>>
+        >>> node1.children.append(node2)
+        >>>
+        >>> assert node2 in node1.children
+        >>> assert node1 in node2.parents
+
+        Cycles are allowed by default
+
+        >>> node1.parents.append(node2)
+        >>>
+        >>> assert node2.children[0] == node1
+        >>> assert node1.parents[0] == node2
+        """
+        self._connections[self._connection_type.name].append(*items)
+
+        for item in items:
+            item._connections[self._connection_type.complement].append(
+                self._owner)
+
+    def remove(self, *items):
+        self._connections[self._connection_type.name].remove(*items)
+
+        for item in items:
+            item._connections.remove[self._connection_type.complement](
+                self._owner)
 
     def _set_content(self, content):
         """Sets content of the container.

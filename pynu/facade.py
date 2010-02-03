@@ -174,10 +174,11 @@ class ConnectionsFacade(object):
         return self._connections[self._connection_type.name][index]
 
     def empty(self):
-        for node in self._connections[self._connection_type.name]:
-            complement_connection = getattr(node,
-                self._connection_type.complement)
-            complement_connection.remove(node)
+        if self._connection_type.complement:
+            for node in self._connections[self._connection_type.name]:
+                complement_connection = getattr(node,
+                    self._connection_type.complement)
+                complement_connection.remove(node)
 
         self._connections[self._connection_type.name].empty()
 
@@ -200,16 +201,18 @@ class ConnectionsFacade(object):
         """
         self._connections[self._connection_type.name].append(*items)
 
-        for item in items:
-            item._connections[self._connection_type.complement].append(
-                self._owner)
+        if self._connection_type.complement:
+            for item in items:
+                item._connections[self._connection_type.complement].append(
+                    self._owner)
 
     def remove(self, *items):
         self._connections[self._connection_type.name].remove(*items)
 
-        for item in items:
-            item._connections.remove[self._connection_type.complement](
-                self._owner)
+        if self._connection_type.complement:
+            for item in items:
+                item._connections.remove[self._connection_type.complement](
+                    self._owner)
 
     def _set_content(self, content):
         """Sets content of the container.
@@ -228,9 +231,9 @@ class ConnectionsFacade(object):
         """
         self.empty()
 
-        if hasattr(content, '__iter__'):
+        try:
             self.append(*content)
-        else:
+        except TypeError:
             self.append(content)
 
 if __name__ == "__main__":

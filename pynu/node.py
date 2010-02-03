@@ -67,11 +67,13 @@ class Node(object):
             return ConnectionsFacade(self, self._type_manager,
                 self._connections, type)
 
-        return super(Node, self).__getattr__(name)
-
     def __setattr__(self, name, value):
         """ Assignment of children/parents resets previous content and creates
         needed links to nodes. Otherwise setting attributes works as expected.
+
+        Setup
+
+        >>> Node._types = {'children': None}
 
         Simple assignment
 
@@ -95,7 +97,6 @@ class Node(object):
         >>> node.value = 13
         >>> assert node.value == 13
         """
-
         def connection_template():
             if hasattr(self, name):
                 connection = getattr(self, name)

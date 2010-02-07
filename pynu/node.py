@@ -94,11 +94,11 @@ class Node(object):
 
         Tuple assignment
 
-        #>>> node1, node2, node3 = Node(), Node(), Node()
-        #>>> node1.children = (node2, node3)
-        #>>>
-        #>>> assert node1.children[0] == node2
-        #>>> assert node1.children[1] == node3
+        >>> node1, node2, node3 = Node(), Node(), Node()
+        >>> node1.children = (node2, node3)
+        >>>
+        >>> assert node1.children[0] == node2
+        >>> assert node1.children[1] == node3
 
         Assign value to an attribute
 

@@ -19,11 +19,19 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see http://www.gnu.org/licenses/
 """
+from facade import ConnectionsFacade
 from node import Node
+
+
+class ParentFacade(ConnectionsFacade):
+
+    def append(self, *items):
+        raise AttributeError
 
 
 class TreeNode(Node):
     _types = {'children': 'parent', }
+    _facades = {'parent': ParentFacade, }
 
     def root(self):
         """Finds the root node.

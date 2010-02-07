@@ -16,11 +16,11 @@ Graph
 
 .. graphviz::
 
-   graph tree {
+   graph treenode {
       "node1" -- "node2a";
       "node1" -- "node2b";
       "node2a" -- "node3a";
-      "node2a" -- "node3b"
+      "node2a" -- "node3b";
    }
 
 Setting Up the Graph

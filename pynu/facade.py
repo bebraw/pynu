@@ -67,11 +67,10 @@ class AccumulatorFacade(object):
 
 class ConnectionsFacade(object):
 
-    def __init__(self, owner, type_manager, connections, connection_type):
-        assert isinstance(connections, dict)
+    def __init__(self, owner, type_manager, connection_type):
         self._owner = owner
         self._type_manager = type_manager
-        self._connections = connections
+        self._connections = owner.connections
         self._connection_type = connection_type
 
     def __len__(self):
@@ -88,59 +87,6 @@ class ConnectionsFacade(object):
         seeks based on the type of the container. For example in case
         "node.parents.find" is invoked, it goes through all parents beginning
         from the parents of the given node.
-
-        Default case
-
-        >>> node1, node2, node3, node4 = Node(), Node(), Node(), Node()
-        >>>
-        >>> node1.children = (node2, node3)
-        >>> node3.parents.append(node4)
-        >>>
-        >>> node1.name = 'joe'
-        >>> node1.value = 13
-        >>> node2.color = 'blue'
-        >>> node3.color = 'black'
-        >>> node4.value = 13
-
-        Single argument, single result
-
-        >>> assert node2.parents.find(name='joe') == node1
-        >>> assert node1.children.find(color='blue') == node2
-
-        Single argument, multiple results
-
-        >>> assert node3.parents.find(value=13) == [node1, node4]
-
-        Multiple arguments, single result
-
-        >>> assert node2.parents.find(name='joe', value=13) == node1
-
-        Regex argument (match anything except newline)
-
-        >>> assert node2.parents.find(name='.') == node1
-
-        Regex argument (match from beginning)
-
-        >>> assert node1.children.find(color='^bl') == [node2, node3]
-
-        No result
-
-        >>> assert node2.parents.find(color='red') == None
-
-        Cyclic case
-
-        >>> node1, node2 = Node(), Node()
-        >>>
-        >>> node1.children = node2
-        >>> node2.children = node1
-        >>>
-        >>> node1.name = 'joe'
-        >>> node2.name = 'jack'
-
-        Single argument, single result
-
-        >>> assert node1.children.find(name='joe') == node1
-        >>> assert node1.children.find(name='jack') == node2
         """
         #return self._connections[self._connection_type.name].find(
         #    self._connection_type.name, **rules)
@@ -183,22 +129,6 @@ class ConnectionsFacade(object):
         self._connections[self._connection_type.name].empty()
 
     def append(self, *items):
-        """
-
-        >>> node1, node2 = Node(), Node()
-        >>>
-        >>> node1.children.append(node2)
-        >>>
-        >>> assert node2 in node1.children
-        >>> assert node1 in node2.parents
-
-        Cycles are allowed by default
-
-        >>> node1.parents.append(node2)
-        >>>
-        >>> assert node2.children[0] == node1
-        >>> assert node1.parents[0] == node2
-        """
         self._connections[self._connection_type.name].append(*items)
 
         if self._connection_type.complement:
@@ -215,20 +145,6 @@ class ConnectionsFacade(object):
                     self._owner)
 
     def _set_content(self, content):
-        """Sets content of the container.
-
-        >>> node1, node2 = Node(), Node()
-        >>> node1.children._set_content(node2)
-        >>>
-        >>> assert node1.children == [node2, ]
-        >>> assert node2.parents == [node1, ]
-        >>>
-        >>> node3 = Node()
-        >>> node1.children._set_content(node3)
-        >>>
-        >>> assert node1.children == [node3, ]
-        >>> assert node2.parents == None
-        """
         self.empty()
 
         try:

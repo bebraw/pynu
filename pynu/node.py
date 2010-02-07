@@ -27,21 +27,32 @@ class TypeManager(object):
 
     class Type(object):
 
-        def __init__(self, name, complement):
+        def __init__(self, name, complement, facades):
             self.name = name
             self.complement = complement
 
-    def __init__(self, types):
+            if name in facades:
+                self.facade = facades[name]
+            else:
+                self.facade = ConnectionsFacade
+
+    def __init__(self, types, facades):
         self._types = dict()
 
         for name, complement in types.items():
             if name:
-                self._types[name] = self.Type(name, complement)
+                self._types[name] = self.Type(name, complement, facades)
 
             if complement:
-                self._types[complement] = self.Type(complement, name)
+                self._types[complement] = self.Type(complement, name, facades)
 
-    def get_type(self, name):
+    def get_facade(self, node, name):
+        type = self._get_type(name)
+
+        if type:
+            return type.facade(node, self, type)
+
+    def _get_type(self, name):
         if name in self._types:
             return self._types[name]
 
@@ -52,20 +63,17 @@ class TypeManager(object):
 
 class Node(object):
     _types = {}
+    _facades = {}
 
     def __init__(self):
-        self._type_manager = TypeManager(self._types)
+        self._type_manager = TypeManager(self._types, self._facades)
 
-        self._connections = dict()
+        self.connections = dict()
         for type in self._type_manager.types:
-            self._connections[type] = Connections(owner=self)
+            self.connections[type] = Connections(owner=self)
 
     def __getattr__(self, name):
-        type = self._type_manager.get_type(name)
-
-        if type:
-            return ConnectionsFacade(self, self._type_manager,
-                self._connections, type)
+        return self._type_manager.get_facade(self, name)
 
     def __setattr__(self, name, value):
         """ Assignment of children/parents resets previous content and creates
@@ -78,17 +86,19 @@ class Node(object):
         Simple assignment
 
         >>> node1, node2 = Node(), Node()
-        >>> node1.children = node2
         >>>
+        >>> assert isinstance(node1.children, ConnectionsFacade)
+        >>> node1.children = node2
+        >>> assert isinstance(node1.children, ConnectionsFacade)
         >>> assert node1.children[0] == node2
 
         Tuple assignment
 
-        >>> node1, node2, node3 = Node(), Node(), Node()
-        >>> node1.children = (node2, node3)
-        >>>
-        >>> assert node1.children[0] == node2
-        >>> assert node1.children[1] == node3
+        #>>> node1, node2, node3 = Node(), Node(), Node()
+        #>>> node1.children = (node2, node3)
+        #>>>
+        #>>> assert node1.children[0] == node2
+        #>>> assert node1.children[1] == node3
 
         Assign value to an attribute
 
@@ -97,16 +107,11 @@ class Node(object):
         >>> node.value = 13
         >>> assert node.value == 13
         """
-        def connection_template():
-            if hasattr(self, name):
-                connection = getattr(self, name)
-
-                connection._set_content(value)
-            else:
-                super(Node, self).__setattr__(name, value)
-
-        if name in self._types.keys():
-            connection_template()
+        if name == '_type_manager':
+            super(Node, self).__setattr__(name, value)
+        elif name in self._type_manager.types:
+            connection = getattr(self, name)
+            connection._set_content(value)
         else:
             super(Node, self).__setattr__(name, value)
 

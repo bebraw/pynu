@@ -23,7 +23,7 @@ from node import Node
 
 
 class BidiGraphNode(Node):
-    _types = {'connections': None, }
+    _types = {'connections': 'connections', }
 
 
 class DiGraphNode(Node):

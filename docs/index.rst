@@ -19,7 +19,8 @@ Pynu - Node Utility Library
 Introduction
 ------------
 
-TODO
+Pynu provides a set of graph and tree related utility classes. These classes
+contain basic means of traversal and manipulation.
 
 API Documentation
 -----------------

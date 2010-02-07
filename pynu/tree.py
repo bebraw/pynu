@@ -28,30 +28,31 @@ class TreeNode(Node):
     def root(self):
         """Finds the root node.
 
-        >>> node1, node1a = TreeNode(), TreeNode()
-        >>> node1b, node1a1 = TreeNode(), TreeNode()
-        >>> node1.children = (node1a, node1b)
-        >>> node1a.children = node1a1
+        >>> node1, node2a, node2b = TreeNode(), TreeNode(), TreeNode()
+        >>> node3a, node3b = TreeNode(), TreeNode()
+        >>>
+        >>> node1.children = (node2a, node2b)
+        >>> node2a.children = (node3a, node3b)
         >>>
         >>> assert node1.root() == node1
-        >>> assert node1a.root() == node1
-        >>> assert node1b.root() == node1
-        >>> assert node1a1.root() == node1
+        >>> assert node2a.root() == node1
+        >>> assert node2b.root() == node1
+        >>> assert node3a.root() == node1
         """
         if self.parent:
-            return self.parent.find(parent=None)
+            return self.parent('parent=None')
 
         return self
 
     def walk(self):
         """Walks through the nodes beginning from the current one in preorder.
 
-        >>> node1, node2, node3 = TreeNode(), TreeNode(), TreeNode()
-        >>> node4, node5 = TreeNode(), TreeNode()
+        >>> node1, node2a, node2b = TreeNode(), TreeNode(), TreeNode()
+        >>> node3a, node3b = TreeNode(), TreeNode()
         >>>
-        >>> node1.children = (node2, node5)
-        >>> node2.children = (node3, node4)
-        >>> result = (node1, node3, node4, node2, node5 )
+        >>> node1.children = (node2a, node2b)
+        >>> node2a.children = (node3a, node3b)
+        >>> result = (node1, node3a, node3b, node2a, node2b)
         >>>
         >>> for i, node in enumerate(node1.walk()):
         ...    assert node == result[i], '%s %s %s' % (i, node, result[i])

@@ -135,11 +135,22 @@ Adding nodes to the structure
 
     >>> node4a, node4b = TreeNode(), TreeNode()
     >>> node3a.children = node4a
-    >>> node3a.append(node4b)
+    >>> node3a.children.append(node4b)
 
 This works as well
 
     >>> node3a.children = (node4a, node4b)
+
+Note that appending to parent should not work. In this case only assignment
+should be used.
+
+    >>> try:
+    ...     node3a.parent.append(node3b)
+    ... except AttributeError:
+    ...     pass
+    ... else:
+    ...     assert False
+
 
 Removing nodes from structure
 """""""""""""""""""""""""""""

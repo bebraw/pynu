@@ -26,7 +26,7 @@ API Documentation
 -----------------
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 3
 
     graph_api
     tree_api

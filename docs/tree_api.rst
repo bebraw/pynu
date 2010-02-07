@@ -39,17 +39,19 @@ Setting Up the Graph
 Traversal
 ^^^^^^^^^
 
-Getting the first child:
+Getting the first child
+""""""""""""""""""""""""
 
     >>> node1.children[0]
     node2a
 
-Getting the last child:
+Getting the last child
+""""""""""""""""""""""
 
     >>> node1.children[-1]
     node2b
 
-Getting the parent:
+This works for the parent attribute too.
 
     >>> node3a.parent
     node2a
@@ -59,29 +61,51 @@ Note that the root node doesn't have a parent.
     >>> node1.parent
     None
 
-Finding a child with specific property (works for parent too):
+Getting an entire level of children
+"""""""""""""""""""""""""""""""""""
 
-    >>> node3a.color = 'blue'
+    >>> node1.children.children
+    [node3a, node3b]
+
+If node2b would have had children as well, they have shown up in the result
+too.
+
+Finding a child with specific property
+""""""""""""""""""""""""""""""""""""""
+
+    >>> node2a.color = 'blue'
     >>> node1.children('color=blue')
-    node3a
+    node2a
+
+Note that this works for parent too.
+
+    >>> node3a.parent('color=blue')
+    node2a
 
 If multiple results are found, results are returned in finding order. Note that
 it is possible to use a regex pattern in the search.
 
-    >>> node2a.color = 'black'
+    >>> node3a.color = 'black'
     >>> node1.children('color=^bl')
     [node2a, node3a]
+
+If no result is found, None is returned:
+
+    >>> node1.children('color=red')
+    None
 
 Manipulation
 ^^^^^^^^^^^^
 
-Setting an attribute:
+Setting an attribute
+""""""""""""""""""""
 
     >>> node2a.width = 200
 
-Setting attribute to multiple nodes at once:
-Note that the selector matches
-any node that has a color attribute.
+Setting an attribute to multiple nodes
+""""""""""""""""""""""""""""""""""""""
+
+Note that the selector matches any node that has a color attribute.
 
     >>> node1.children('color=.').height = 100
     >>> node2a.height
@@ -89,17 +113,36 @@ any node that has a color attribute.
     >>> node3a.height
     100
 
-Adding nodes to structure:
+Setting an attribute to a whole level
+"""""""""""""""""""""""""""""""""""""
+
+    >>> node1.children.children.width = 150
+    >>> node3a.width
+    150
+    >>> node3b.width
+    150
+
+Note that it's possible to alter an existing value as well.
+
+    >>> node1.children.children.width -= 100
+    >>> node3a.width
+    50
+    >>> node3b.width
+    50
+
+Adding nodes to the structure
+"""""""""""""""""""""""""""""
 
     >>> node4a, node4b = TreeNode(), TreeNode()
     >>> node3a.children = node4a
     >>> node3a.append(node4b)
 
-This works as well:
+This works as well
 
     >>> node3a.children = (node4a, node4b)
 
-Removing nodes from structure.
+Removing nodes from structure
+"""""""""""""""""""""""""""""
 
     >>> assert len(node3a.children) == 2
     >>> node3a.children.remove(node4b)

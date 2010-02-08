@@ -47,12 +47,12 @@ class TypeManager(object):
                 self._types[complement] = self.Type(complement, name, facades)
 
     def get_facade(self, node, name):
-        type = self._get_type(name)
+        type = self.get_type(name)
 
         if type:
-            return type.facade(node, self, type)
+            return type.facade(node, self, node.connections, type)
 
-    def _get_type(self, name):
+    def get_type(self, name):
         if name in self._types:
             return self._types[name]
 

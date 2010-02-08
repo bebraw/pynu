@@ -42,30 +42,25 @@ Traversal
 Getting the first child
 """"""""""""""""""""""""
 
-    >>> node1.children[0]
-    node2a
+    >>> assert node1.children[0] is node2a
 
 Getting the last child
 """"""""""""""""""""""
 
-    >>> node1.children[-1]
-    node2b
+    >>> assert node1.children[-1] is node2b
 
 This works for the parent attribute too.
 
-    >>> node3a.parent
-    node2a
+    >>> assert node3a.parent is node2a
 
 Note that the root node doesn't have a parent.
 
-    >>> node1.parent
-    None
+    >>> assert node1.parent is None
 
 Getting an entire level of children
 """""""""""""""""""""""""""""""""""
 
-    >>> node1.children.children
-    [node3a, node3b]
+    >>> assert node1.children.children == [node3a, node3b]
 
 If node2b would have had children as well, they have shown up in the result
 too.
@@ -86,13 +81,11 @@ If multiple results are found, results are returned in finding order. Note that
 it is possible to use a regex pattern in the search.
 
     >>> node3a.color = 'black'
-    >>> node1.children('color=^bl')
-    [node2a, node3a]
+    >>> assert node1.children('color=^bl') == [node2a, node3a]
 
 If no result is found, None is returned:
 
-    >>> node1.children('color=red')
-    None
+    >>> assert node1.children('color=red') is None
 
 Manipulation
 ^^^^^^^^^^^^

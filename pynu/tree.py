@@ -26,12 +26,31 @@ from node import Node
 class ParentFacade(ConnectionsFacade):
 
     def append(self, *items):
+        """
+
+        >>> from py.test import raises
+        >>>
+        >>> facade = ParentFacade()
+        >>>
+        >>> raises(AttributeError, facade.append)
+        """
         raise AttributeError
 
 
 class TreeNode(Node):
     _types = {'children': 'parent', }
     _facades = {'parent': ParentFacade, }
+
+    def __getattr__(self, name):
+        facade = super(TreeNode, self).__getattr__(name)
+
+        if name == 'parent':
+            if len(facade) > 0:
+                return facade[0]
+
+            return
+
+        return facade
 
     def root(self):
         """Finds the root node.

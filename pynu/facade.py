@@ -67,10 +67,10 @@ class AccumulatorFacade(object):
 
 class ConnectionsFacade(object):
 
-    def __init__(self, owner, type_manager, connection_type):
+    def __init__(self, owner, type_manager, connections, connection_type):
         self._owner = owner
         self._type_manager = type_manager
-        self._connections = owner.connections
+        self._connections = connections
         self._connection_type = connection_type
 
     def __len__(self):
@@ -102,7 +102,7 @@ class ConnectionsFacade(object):
             nodes = list()
 
             for node in self._connections[self._connection_type.name]:
-                nodes.append(getattr(node, connection_type))
+                nodes.append(getattr(node, connection_type.name))
 
             return AccumulatorFacade(self._type_manager, nodes)
 
@@ -133,7 +133,7 @@ class ConnectionsFacade(object):
 
         if self._connection_type.complement:
             for item in items:
-                item._connections[self._connection_type.complement].append(
+                item.connections[self._connection_type.complement].append(
                     self._owner)
 
     def remove(self, *items):
@@ -141,7 +141,7 @@ class ConnectionsFacade(object):
 
         if self._connection_type.complement:
             for item in items:
-                item._connections[self._connection_type.complement].remove(
+                item.connections[self._connection_type.complement].remove(
                     self._owner)
 
     def _set_content(self, content):

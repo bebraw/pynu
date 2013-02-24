@@ -4,7 +4,7 @@ Node utilities for Python.
 """
 """
 Pynu - Python Node Utilities
-Copyright (C) 2010 Juho Vepsäläinen
+Copyright (C) 2013 Juho Vepsäläinen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,4 +23,4 @@ from graph import GraphNode
 from tree import TreeNode
 
 __author__ = 'Juho Vepsäläinen'
-__version__ = '0.1.1'
+__version__ = '0.1.2'

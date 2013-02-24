@@ -21,6 +21,7 @@ from setuptools import setup
 import pynu
 
 
+# XXX: breaks build!
 def long_description():
     description_files = ('README', 'CHANGELOG', )
 
@@ -34,7 +35,7 @@ setup(name='Pynu',
     version=pynu.__version__,
     description='Pynu provides utility classes that offer basic graph tree \
 traversal and manipulation functionality.',
-    long_description=long_description(),
+    #long_description=long_description(),
     author=pynu.__author__,
     author_email='bebraw@gmail.com',
     url='http://github.com/bebraw/pynu',

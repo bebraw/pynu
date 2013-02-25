@@ -52,6 +52,10 @@ class TreeNode(Node):
 
         return facade
 
+    def __call__(self, search):
+        # TODO: search
+        return self
+
     def root(self):
         """Finds the root node.
 

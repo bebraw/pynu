@@ -1,0 +1,7 @@
+include TODO
+include CHANGELOG
+include INSTALL
+include LICENSE
+include README
+recursive-include docs *.py
+recursive-include docs *.rst

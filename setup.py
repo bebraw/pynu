@@ -47,11 +47,10 @@ traversal and manipulation functionality.',
         'setuptools',
         # -*- Extra requirements: -*-
     ],
-    data_files=[('readme', ['README', ]), ('todo', ['TODO', ]), ],
       classifiers=[
           'Development Status :: 3 - Alpha',
           'Intended Audience :: Developers',
-          'License :: OSI Approved :: GNU General Public License (GPL)',
+          'License :: OSI Approved :: MIT License',
           'Natural Language :: English',
           'Operating System :: OS Independent',
           'Programming Language :: Python :: 2.6',

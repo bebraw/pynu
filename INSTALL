@@ -1,1 +1,3 @@
 Just run setup.py ("python setup.py install").
+Or pip install pynu
+Or easy-install pynu
